@@ -431,10 +431,9 @@ section { padding: 100px 5%; position: relative; z-index: 1; }
 }
 /* category dot colours */
 .sk-cat-dot  { position: absolute; top: 8px; right: 10px; width: 6px; height: 6px; border-radius: 50%; opacity: .7; }
-.dot-lang    { background: #3b82f6; }
-.dot-ds      { background: #06b6d4; }
-.dot-tools   { background: #f59e0b; }
-.dot-soft    { background: #10b981; }
+.dot-lang  { background: #3b82f6; }
+.dot-ds    { background: #06b6d4; }
+.dot-tools { background: #f59e0b; }
 .sk-label {
   font-size: .78rem; font-weight: 600; color: var(--text);
   text-align: center; line-height: 1.3;
@@ -486,12 +485,31 @@ section { padding: 100px 5%; position: relative; z-index: 1; }
 .project-title { font-family: var(--font-h); font-weight: 700; font-size: 1.08rem; margin-bottom: .6rem; color: var(--text); }
 .project-date { font-family: var(--font-m); font-size: .7rem; color: var(--muted); margin-bottom: .5rem; }
 .project-desc { color: var(--muted); font-size: .87rem; line-height: 1.68; flex: 1; }
-.project-footer { padding: 1rem 1.6rem; border-top: 1px solid var(--card-border); display: flex; gap: .8rem; align-items: center; }
+.project-footer { padding: 1rem 1.6rem; border-top: 1px solid var(--card-border); display: flex; gap: .8rem; align-items: center; justify-content: space-between; }
 .project-link {
   color: var(--accent); font-size: .8rem; font-weight: 600;
   letter-spacing: .04em; display: flex; align-items: center; gap: 4px; transition: gap .2s;
 }
 .project-link:hover { gap: 8px; }
+
+/* link badges shown on card footer */
+.proj-link-badges { display: flex; gap: 6px; }
+.plb {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; transition: transform .25s, box-shadow .25s;
+  pointer-events: none; /* card click opens modal */
+}
+.plb-gh {
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  color: #e6edf3;
+}
+.plb-li {
+  background: rgba(10,102,194,.15); border: 1px solid rgba(10,102,194,.4);
+  color: #70a9d6;
+}
+.project-card:hover .plb-gh { box-shadow: 0 0 10px rgba(255,255,255,.15); transform: scale(1.1); }
+.project-card:hover .plb-li { box-shadow: 0 0 10px rgba(10,102,194,.3);  transform: scale(1.1); }
 
 /* ============================================================
    MODAL  — full detail popup with GitHub + Live Demo
@@ -680,6 +698,31 @@ section { padding: 100px 5%; position: relative; z-index: 1; }
   box-shadow: 0 8px 24px rgba(0,229,255,.25);
 }
 
+/* LinkedIn button in modal */
+.m-link-li {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 11px 26px;
+  background: rgba(10,102,194,.15);
+  border: 1.5px solid rgba(10,102,194,.5);
+  color: #70a9d6; border-radius: 10px;
+  font-family: var(--font-m); font-size: .85rem; font-weight: 600;
+  transition: all .3s; text-decoration: none;
+}
+.m-link-li:hover {
+  background: rgba(10,102,194,.28);
+  border-color: #0a66c2; color: #90c4e8;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(10,102,194,.3);
+}
+
+/* small external-link icon inside buttons */
+.m-ext {
+  font-size: .65rem; opacity: .75;
+  transition: transform .25s, opacity .25s;
+}
+.m-link:hover .m-ext,
+.m-link-li:hover .m-ext { transform: translate(2px,-2px); opacity: 1; }
+
 /* ============================================================
    ACHIEVEMENTS
 ============================================================ */
@@ -841,8 +884,97 @@ footer {
 footer span { color: var(--accent); }
 
 /* ============================================================
-   SCROLL REVEAL
+   SOFT SKILLS — dedicated section
 ============================================================ */
+#softskills { background: var(--bg2); }
+
+.ss-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 2rem; margin-bottom: 3rem; flex-wrap: wrap;
+}
+.ss-sub {
+  color: var(--muted); font-size: .95rem; line-height: 1.75;
+  max-width: 420px; margin-bottom: .3rem;
+}
+/* 5-card grid — 2 cols on wide, 1 col on mobile */
+.ss-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 1.4rem;
+}
+.ss-card {
+  background: var(--card);
+  border: 1px solid rgba(var(--ss-rgb), .22);
+  border-radius: 20px; padding: 1.8rem 2rem;
+  display: flex; align-items: flex-start; gap: 1.6rem;
+  position: relative; overflow: hidden;
+  transition: transform .38s cubic-bezier(.34,1.3,.64,1),
+              box-shadow .38s, border-color .38s;
+}
+/* colour accent top bar */
+.ss-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, rgba(var(--ss-rgb),.9), rgba(var(--ss-rgb),.3));
+  border-radius: 20px 20px 0 0;
+}
+/* subtle corner glow */
+.ss-card::after {
+  content: ''; position: absolute; top: -30px; right: -30px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--ss-rgb),.14), transparent 70%);
+  pointer-events: none; transition: opacity .38s;
+}
+.ss-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  border-color: rgba(var(--ss-rgb), .55);
+  box-shadow: 0 16px 48px rgba(0,0,0,.28), 0 0 36px rgba(var(--ss-rgb),.15);
+}
+
+/* icon column */
+.ss-icon-wrap { position: relative; flex-shrink: 0; width: 56px; height: 56px; }
+.ss-icon-ring {
+  position: absolute; inset: -5px; border-radius: 50%;
+  border: 1.5px dashed rgba(var(--ss-rgb), .4);
+  animation: ssRingSpin 18s linear infinite;
+}
+@keyframes ssRingSpin { to { transform: rotate(360deg); } }
+.ss-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: rgba(var(--ss-rgb), .14);
+  border: 1.5px solid rgba(var(--ss-rgb), .35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; color: rgb(var(--ss-rgb));
+  position: relative; z-index: 1;
+  transition: box-shadow .35s, transform .35s;
+}
+.ss-card:hover .ss-icon {
+  box-shadow: 0 0 22px rgba(var(--ss-rgb), .45);
+  transform: scale(1.1);
+}
+
+/* text column */
+.ss-info { flex: 1; min-width: 0; }
+.ss-title {
+  font-family: var(--font-h); font-weight: 800; font-size: 1.05rem;
+  color: var(--text); margin-bottom: .55rem;
+}
+.ss-desc {
+  font-size: .87rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.1rem;
+}
+
+/* animated proficiency bar */
+.ss-bar-wrap {
+  height: 4px; background: rgba(255,255,255,.07);
+  border-radius: 99px; overflow: hidden;
+}
+.ss-bar {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, rgb(var(--ss-rgb)), rgba(var(--ss-rgb),.5));
+  border-radius: 99px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+/* bar animates when card enters viewport */
+.ss-card.bar-animate .ss-bar { width: var(--w); }
 .reveal { opacity: 1; transform: none; }
 /* JS adds .will-hide before observing, then .visible on entry */
 
@@ -857,6 +989,8 @@ footer span { color: var(--accent); }
   .contact-grid { grid-template-columns: 1fr; }
   .intern-card { grid-template-columns: 1fr; }
   .skills-cards-grid { grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); }
+  .ss-grid { grid-template-columns: 1fr; }
+  .ss-header { flex-direction: column; align-items: flex-start; }
 }
 @media (max-width: 680px) {
   .nav-links {
@@ -892,13 +1026,14 @@ footer span { color: var(--accent); }
   <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#softskills">Soft Skills</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#internship">Internship</a></li>
     <li><a href="#training">Training</a></li>
     <li><a href="#certifications">Certs</a></li>
     <li><a href="#education">Education</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><button class="theme-btn" onclick="toggleTheme()" id="themeBtn">☀ Light</button></li>
+    <li><button class="theme-btn" onclick="toggleTheme()" id="themeBtn"><i class="fas fa-sun" style="font-size:.8rem"></i> Light</button></li>
   </ul>
   <div class="hamburger" id="hamburger" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -949,7 +1084,7 @@ footer span { color: var(--accent); }
         <div class="about-photo">
           <!-- REPLACE: swap the icon for your real photo -->
           <!-- <img src="profile.jpg" alt="Swathi Challakonda"> -->
-          <img src="/swathi pic.jpeg" alt="Swathi Challakonda">
+          <div class="about-photo-fallback"><i class="fas fa-user"></i></div>
         </div>
         <div class="about-photo-badge">
           <span class="dot-sm"></span> Available
@@ -988,22 +1123,21 @@ footer span { color: var(--accent); }
 </section>
 
 <!-- ============================================================
-  SKILLS — CV-exact skills only, colourful icons, filter
+  SKILLS — Technical skills only (soft skills moved to own section)
 ============================================================ -->
 <section id="skills">
   <p class="section-label reveal">Technical Arsenal</p>
   <h2 class="section-title reveal">Skills &amp; <span>Tools</span></h2>
 
-  <!-- Filter buttons -->
+  <!-- Filter buttons — no Soft Skills filter here -->
   <div class="skill-filters reveal" id="skillFilters">
     <button class="sf-btn active" data-filter="all">All</button>
     <button class="sf-btn" data-filter="lang">Languages</button>
     <button class="sf-btn" data-filter="ds">Libraries</button>
     <button class="sf-btn" data-filter="tools">Tools</button>
-    <button class="sf-btn" data-filter="soft">Soft Skills</button>
   </div>
 
-  <!-- Individual skill cards — only what is in the CV -->
+  <!-- Individual skill cards — Languages, Libraries, Tools only -->
   <div class="skills-cards-grid" id="skillsGrid">
 
     <!-- ── LANGUAGES ── -->
@@ -1222,45 +1356,81 @@ footer span { color: var(--accent); }
       <span class="sk-label">GitHub</span>
     </div>
 
-    <!-- ── SOFT SKILLS ── -->
-    <div class="sk-card" data-cat="soft">
-      <span class="sk-cat-dot dot-soft"></span>
-      <div class="sk-icon" style="background:rgba(16,185,129,.15);border-color:rgba(16,185,129,.4)">
-        <i class="fas fa-puzzle-piece" style="color:#10b981;font-size:1.3rem"></i>
+  </div>
+</section>
+
+<!-- ============================================================
+  SOFT SKILLS — Dedicated section with animated cards
+============================================================ -->
+<section id="softskills">
+  <div class="ss-header reveal">
+    <div>
+      <p class="section-label">People &amp; Mindset</p>
+      <h2 class="section-title">Soft <span>Skills</span></h2>
+    </div>
+    <p class="ss-sub reveal">Beyond the code — the qualities that make collaboration, problem-solving, and growth possible.</p>
+  </div>
+
+  <div class="ss-grid">
+
+    <div class="ss-card reveal" style="--ss-clr:#10b981;--ss-rgb:16,185,129">
+      <div class="ss-icon-wrap">
+        <div class="ss-icon-ring"></div>
+        <div class="ss-icon"><i class="fas fa-puzzle-piece"></i></div>
       </div>
-      <span class="sk-label">Problem Solving</span>
+      <div class="ss-info">
+        <h3 class="ss-title">Problem Solving</h3>
+        <p class="ss-desc">Breaking down complex challenges into clear, logical steps — finding efficient, creative solutions through structured algorithmic thinking and DSA practice.</p>
+        <div class="ss-bar-wrap"><div class="ss-bar" style="--w:92%"></div></div>
+      </div>
     </div>
 
-    <div class="sk-card" data-cat="soft">
-      <span class="sk-cat-dot dot-soft"></span>
-      <div class="sk-icon" style="background:rgba(59,130,246,.15);border-color:rgba(59,130,246,.4)">
-        <i class="fas fa-users" style="color:#3b82f6;font-size:1.3rem"></i>
+    <div class="ss-card reveal" style="--ss-clr:#3b82f6;--ss-rgb:59,130,246">
+      <div class="ss-icon-wrap">
+        <div class="ss-icon-ring"></div>
+        <div class="ss-icon"><i class="fas fa-users"></i></div>
       </div>
-      <span class="sk-label">Team Player</span>
+      <div class="ss-info">
+        <h3 class="ss-title">Team Player</h3>
+        <p class="ss-desc">Collaborative by nature — actively contributed to university events and group projects, always prioritising shared goals and supporting teammates to achieve the best outcome.</p>
+        <div class="ss-bar-wrap"><div class="ss-bar" style="--w:90%"></div></div>
+      </div>
     </div>
 
-    <div class="sk-card" data-cat="soft">
-      <span class="sk-cat-dot dot-soft"></span>
-      <div class="sk-icon" style="background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.4)">
-        <i class="fas fa-sync-alt" style="color:#f59e0b;font-size:1.3rem"></i>
+    <div class="ss-card reveal" style="--ss-clr:#f59e0b;--ss-rgb:245,158,11">
+      <div class="ss-icon-wrap">
+        <div class="ss-icon-ring"></div>
+        <div class="ss-icon"><i class="fas fa-sync-alt"></i></div>
       </div>
-      <span class="sk-label">Adaptability</span>
+      <div class="ss-info">
+        <h3 class="ss-title">Adaptability</h3>
+        <p class="ss-desc">Comfortable switching between programming languages, tools, and problem domains — from Power BI dashboards to ML pipelines — with a growth mindset and a willingness to learn fast.</p>
+        <div class="ss-bar-wrap"><div class="ss-bar" style="--w:88%"></div></div>
+      </div>
     </div>
 
-    <div class="sk-card" data-cat="soft">
-      <span class="sk-cat-dot dot-soft"></span>
-      <div class="sk-icon" style="background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4)">
-        <i class="fas fa-comments" style="color:#a855f7;font-size:1.3rem"></i>
+    <div class="ss-card reveal" style="--ss-clr:#a855f7;--ss-rgb:168,85,247">
+      <div class="ss-icon-wrap">
+        <div class="ss-icon-ring"></div>
+        <div class="ss-icon"><i class="fas fa-comments"></i></div>
       </div>
-      <span class="sk-label">Communication</span>
+      <div class="ss-info">
+        <h3 class="ss-title">Communication</h3>
+        <p class="ss-desc">Translating complex data findings into clear, compelling visual stories — demonstrated through dashboards, presentations, and leading 10+ university events with Student Organization SPIRIT.</p>
+        <div class="ss-bar-wrap"><div class="ss-bar" style="--w:87%"></div></div>
+      </div>
     </div>
 
-    <div class="sk-card" data-cat="soft">
-      <span class="sk-cat-dot dot-soft"></span>
-      <div class="sk-icon" style="background:rgba(6,182,212,.15);border-color:rgba(6,182,212,.4)">
-        <i class="fas fa-lightbulb" style="color:#06b6d4;font-size:1.3rem"></i>
+    <div class="ss-card reveal" style="--ss-clr:#06b6d4;--ss-rgb:6,182,212">
+      <div class="ss-icon-wrap">
+        <div class="ss-icon-ring"></div>
+        <div class="ss-icon"><i class="fas fa-lightbulb"></i></div>
       </div>
-      <span class="sk-label">Analytical Thinking</span>
+      <div class="ss-info">
+        <h3 class="ss-title">Analytical Thinking</h3>
+        <p class="ss-desc">Naturally data-driven — whether exploring pollutant trends, sales KPIs, or AQI forecasts, I approach every problem with curiosity, rigour, and a focus on actionable insights.</p>
+        <div class="ss-bar-wrap"><div class="ss-bar" style="--w:94%"></div></div>
+      </div>
     </div>
 
   </div>
@@ -1277,7 +1447,7 @@ footer span { color: var(--accent); }
 
     <div class="project-card reveal" onclick="openModal('p4')">
       <div class="project-header">
-        <div class="project-icon-wrap pi-green">🌬️</div>
+        <div class="project-icon-wrap pi-green"><i class="fas fa-wind"></i></div>
         <div class="project-tags">
           <span class="tag">Python</span><span class="tag">LSTM</span>
           <span class="tag">Streamlit</span><span class="tag">ML</span>
@@ -1290,12 +1460,15 @@ footer span { color: var(--accent); }
       </div>
       <div class="project-footer">
         <span class="project-link">View Details <i class="fas fa-arrow-right"></i></span>
+        <div class="proj-link-badges">
+          <span class="plb plb-gh" title="GitHub Repository"><i class="fab fa-github"></i></span>
+        </div>
       </div>
     </div>
 
     <div class="project-card reveal" onclick="openModal('p1')">
       <div class="project-header">
-        <div class="project-icon-wrap pi-orange">👟</div>
+        <div class="project-icon-wrap pi-orange"><i class="fas fa-chart-bar"></i></div>
         <div class="project-tags">
           <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">BI</span>
         </div>
@@ -1307,12 +1480,15 @@ footer span { color: var(--accent); }
       </div>
       <div class="project-footer">
         <span class="project-link">View Details <i class="fas fa-arrow-right"></i></span>
+        <div class="proj-link-badges">
+          <span class="plb plb-li" title="LinkedIn Post"><i class="fab fa-linkedin"></i></span>
+        </div>
       </div>
     </div>
 
     <div class="project-card reveal" onclick="openModal('p2')">
       <div class="project-header">
-        <div class="project-icon-wrap pi-blue">🎵</div>
+        <div class="project-icon-wrap pi-blue"><i class="fas fa-music"></i></div>
         <div class="project-tags">
           <span class="tag">Python</span><span class="tag">Matplotlib</span><span class="tag">Pandas</span>
         </div>
@@ -1324,12 +1500,15 @@ footer span { color: var(--accent); }
       </div>
       <div class="project-footer">
         <span class="project-link">View Details <i class="fas fa-arrow-right"></i></span>
+        <div class="proj-link-badges">
+          <span class="plb plb-gh" title="GitHub Repository"><i class="fab fa-github"></i></span>
+        </div>
       </div>
     </div>
 
     <div class="project-card reveal" onclick="openModal('p3')">
       <div class="project-header">
-        <div class="project-icon-wrap pi-teal">🧪</div>
+        <div class="project-icon-wrap pi-teal"><i class="fas fa-flask"></i></div>
         <div class="project-tags">
           <span class="tag">Excel</span><span class="tag">Pivot Tables</span><span class="tag">Data Viz</span>
         </div>
@@ -1341,6 +1520,9 @@ footer span { color: var(--accent); }
       </div>
       <div class="project-footer">
         <span class="project-link">View Details <i class="fas fa-arrow-right"></i></span>
+        <div class="proj-link-badges">
+          <span class="plb plb-li" title="LinkedIn Post"><i class="fab fa-linkedin"></i></span>
+        </div>
       </div>
     </div>
 
@@ -1359,7 +1541,7 @@ footer span { color: var(--accent); }
   <p class="section-label reveal">Experience</p>
   <h2 class="section-title reveal">Internship &amp; <span>Training</span></h2>
   <div class="c3d intern-card reveal">
-    <div class="intern-icon">🏢</div>
+    <div class="intern-icon"><i class="fas fa-building"></i></div>
     <div>
       <div class="intern-title">Virtual Internship — Infosys Springboard 6.0</div>
       <div class="intern-org">Infosys · Batch 13</div>
@@ -1389,7 +1571,7 @@ footer span { color: var(--accent); }
 ============================================================ -->
 <section id="training">
   <div class="training-card reveal">
-    <div class="training-icon">🧠</div>
+    <div class="training-icon"><i class="fas fa-brain"></i></div>
     <div>
       <h3 class="training-title">From Data to Insights: A Hands-On Approach to Data Science</h3>
       <p class="training-org">Lovely Professional University · July 2025</p>
@@ -1399,13 +1581,13 @@ footer span { color: var(--accent); }
         built machine learning models.
       </p>
       <div class="training-items">
-        <span class="training-item">📥 Data Collection</span>
-        <span class="training-item">🧹 Data Preprocessing</span>
-        <span class="training-item">🔍 Exploratory Data Analysis</span>
-        <span class="training-item">📉 Data Visualization</span>
-        <span class="training-item">🤖 Machine Learning Basics</span>
-        <span class="training-item">🐍 Python · NumPy · Pandas</span>
-        <span class="training-item">📊 Scikit-Learn · Seaborn</span>
+        <span class="training-item"><i class="fas fa-download"></i> Data Collection</span>
+        <span class="training-item"><i class="fas fa-broom"></i> Data Preprocessing</span>
+        <span class="training-item"><i class="fas fa-search"></i> Exploratory Data Analysis</span>
+        <span class="training-item"><i class="fas fa-chart-line"></i> Data Visualization</span>
+        <span class="training-item"><i class="fas fa-robot"></i> Machine Learning Basics</span>
+        <span class="training-item"><i class="fab fa-python"></i> Python · NumPy · Pandas</span>
+        <span class="training-item"><i class="fas fa-cogs"></i> Scikit-Learn · Seaborn</span>
       </div>
     </div>
   </div>
@@ -1429,28 +1611,28 @@ footer span { color: var(--accent); }
   <h2 class="section-title reveal">Achievements</h2>
   <div class="achievements-wrap">
     <div class="ach-card reveal">
-      <div class="ach-icon">⚔️</div>
+      <div class="ach-icon"><i class="fas fa-code"></i></div>
       <div>
         <div class="ach-title">100+ DSA Problems on LeetCode</div>
         <div class="ach-desc">Strengthened logical reasoning and algorithmic thinking with a focused approach on Arrays, Recursion, and core programming patterns.</div>
       </div>
     </div>
     <div class="ach-card reveal">
-      <div class="ach-icon">🎓</div>
+      <div class="ach-icon"><i class="fas fa-graduation-cap"></i></div>
       <div>
         <div class="ach-title">99% in Class X — Academic Excellence</div>
         <div class="ach-desc">Achieved a top score of 99% in matriculation at Sri Prakash Vidya Niketan School, Andhra Pradesh — reflecting strong academic dedication.</div>
       </div>
     </div>
     <div class="ach-card reveal">
-      <div class="ach-icon">📅</div>
+      <div class="ach-icon"><i class="fas fa-calendar-check"></i></div>
       <div>
         <div class="ach-title">10+ University Events Organized</div>
         <div class="ach-desc">Demonstrated leadership and coordination by successfully organizing 10+ events as an active member of Student Organization SPIRIT at LPU.</div>
       </div>
     </div>
     <div class="ach-card reveal">
-      <div class="ach-icon">🏢</div>
+      <div class="ach-icon"><i class="fas fa-building"></i></div>
       <div>
         <div class="ach-title">Selected — Infosys Springboard 6.0</div>
         <div class="ach-desc">Chosen for the prestigious Infosys Springboard 6.0 virtual internship (Batch 13) to develop a real-world ML-powered air quality prediction system.</div>
@@ -1507,7 +1689,7 @@ footer span { color: var(--accent); }
     <div class="contact-links reveal">
       <a href="/cdn-cgi/l/email-protection#295a5e485d41404a41484545484246474d481d1d1d694e44484045074a4644" class="contact-link">
         <span class="contact-link-icon"><i class="fas fa-envelope"></i></span>
-        <div><div class="contact-link-label">Email</div><div class="contact-link-val"><span class="__cf_email__" data-cfemail="80f3f7e1f4e8e9e3e8e1ecece1ebefeee4e1b4b4b4c0e7ede1e9ecaee3efed">[email&#160;protected]</span></div></div>
+        <div><div class="contact-link-label">Email</div><div class="contact-link-val"><span class="__cf_email__" data-cfemail="80f3f7e1f4e8e9e3e8e1ecece1ebefeee4e1b4b4b4c0e7ede1e9ecaee3efed">swathichallakonda444@gmail.com</span></div></div>
       </a>
       <a href="tel:+919014148725" class="contact-link">
         <span class="contact-link-icon"><i class="fas fa-phone"></i></span>
@@ -1531,13 +1713,13 @@ footer span { color: var(--accent); }
     <!-- right: form -->
     <div class="reveal">
       <div class="c-form">
-        <div class="fg"><label>Your Name</label><input type="text" id="cN" placeholder="Jane Doe"></div>
-        <div class="fg"><label>Email</label><input type="email" id="cE" placeholder="jane@example.com"></div>
+        <div class="fg"><label>Your Name</label><input type="text" id="cN" placeholder="Riya Jha"></div>
+        <div class="fg"><label>Email</label><input type="email" id="cE" placeholder="riyajha@example.com"></div>
         <div class="fg"><label>Message</label><textarea id="cM" rows="5" placeholder="Hi Swathi, I'd love to connect…"></textarea></div>
         <button class="btn-primary" onclick="sendMsg()" style="align-self:flex-start">
           <i class="fas fa-paper-plane"></i> Send Message
         </button>
-        <div class="form-ok" id="form-ok">✓ Message opened in your email client!</div>
+        <div class="form-ok" id="form-ok"><i class="fas fa-check-circle"></i> Message opened in your email client!</div>
       </div>
     </div>
   </div>
@@ -1545,13 +1727,13 @@ footer span { color: var(--accent); }
   <!-- SHARE BANNER -->
   <div class="share-banner reveal">
     <div class="share-banner-text">
-      <strong>🔗 Share My Portfolio</strong>
+      <strong><i class="fas fa-link"></i> Share My Portfolio</strong>
       Copy and share this link with recruiters or collaborators.
     </div>
     <div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
       <!-- UPDATE this URL after deploying -->
-      <div class="share-url" id="shareUrl" onclick="copyLink()">🔗 swathichallakonda.github.io</div>
-      <span class="copy-msg" id="copyMsg">✓ Copied!</span>
+      <div class="share-url" id="shareUrl" onclick="copyLink()"><i class="fas fa-link"></i> swathichallakonda.github.io</div>
+      <span class="copy-msg" id="copyMsg"><i class="fas fa-check"></i> Copied!</span>
     </div>
   </div>
 </section>
@@ -1575,26 +1757,32 @@ footer span { color: var(--accent); }
 ============================================================ -->
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* ============================================================
-   ★  CONFIGURATION — UPDATE ALL LINKS HERE
+   //  CONFIGURATION — UPDATE ALL LINKS HERE
 ============================================================ */
 const CFG = {
-  github:   'https://github.com/swathichallakonda',         // ← your actual GitHub URL
-  linkedin: 'https://linkedin.com/in/swathi-challakonda',   // ← your actual LinkedIn URL
-  leetcode: 'https://leetcode.com/swathichallakonda',       // ← your actual LeetCode URL
-  resume:   'Swathi_CV.pdf',                                // ← PDF filename or Google Drive URL
-  portfolio:'https://swathichallakonda.github.io',          // ← update after deploying
+  github:   'https://github.com/Swathichallakonda',
+  linkedin: 'https://linkedin.com/in/swathi-challakonda-869357298',
+  leetcode: 'https://leetcode.com/swathichallakonda',
+  resume:   'Swathi_CV.pdf',
+  portfolio:'https://swathichallakonda.github.io',
 
-  // Project links — replace '#' with actual GitHub / project URL
-  p1: '#',  // Nike Sales Dashboard
-  p2: '#',  // Concert Dashboard
-  p3: '#',  // Metal Concentration Dashboard
-  p4: '#',  // AirAware
+  // ── PROJECT — GitHub code links
+  p1_gh: '',   // Nike: no GitHub (Power BI file)
+  p2_gh: 'https://github.com/Swathichallakonda/Python-CA2/blob/main/python%20dashboard%20project.zip',
+  p3_gh: '',   // Metal: no GitHub (Excel file)
+  p4_gh: 'https://github.com/Swathichallakonda/AirAware-AQI-Prediction',
 
-  // Certificate links — replace '#' with actual certificate URL
-  c1: '#',  // ChatGPT Prompt Engineering (Infosys)
-  c2: '#',  // Computer Communications (Coursera)
-  c3: '#',  // Privacy & Security (NPTEL)
-  c4: '#',  // Data to Insights (LPU)
+  // ── PROJECT — LinkedIn post links
+  p1_li: 'https://www.linkedin.com/posts/swathi-challakonda-869357298_powerbi-dataanalytics-businessintelligence-activity-7407484282627063808-H6pF',
+  p2_li: '',   // Concert: no LinkedIn post
+  p3_li: 'https://www.linkedin.com/feed/update/urn:li:activity:7317848584140242944/',
+  p4_li: '',   // AirAware: no LinkedIn post
+
+  // ── CERTIFICATE links (Google Drive)
+  c1: 'https://drive.google.com/file/d/1pK4NMfsVP35HXmiyS3TeJ7JJoXsqxlmQ/view',  // ChatGPT-4 Prompt Engineering
+  c2: 'https://drive.google.com/file/d/1JhUbiTFKTS08vzlK_j9p14v8cqNpdgtN/view',  // Computer Communications
+  c3: 'https://drive.google.com/file/d/1gGtqvdycp8WIjAy6gapP6OXO1O-8ZbHF/view',  // Privacy & Security
+  c4: 'https://drive.google.com/file/d/10MnZAm1o3LC51qP1X2J8wOxkKNJlrFNq/view',  // Data to Insights (Training)
 };
 
 /* Apply config to DOM */
@@ -1606,7 +1794,7 @@ const CFG = {
   document.getElementById('fsb-github').href   = CFG.github;
   document.getElementById('fsb-linkedin').href = CFG.linkedin;
   document.getElementById('fsb-lc').href       = CFG.leetcode;
-  document.getElementById('shareUrl').textContent = '🔗 ' + CFG.portfolio.replace('https://','');
+  document.getElementById('shareUrl').innerHTML = '<i class="fas fa-link"></i> ' + CFG.portfolio.replace('https://','');
 })();
 
 /* ============================================================
@@ -1625,8 +1813,8 @@ const PROJECTS = {
       'Custom DAX measures for KPI calculation and benchmarking',
       'Strengthened data modeling, business intelligence, and data storytelling skills',
     ],
-    link: CFG.p1,
-    demo: '',  // add Live Demo URL here if available
+    gh: CFG.p1_gh,
+    li: CFG.p1_li,
   },
   p2: {
     type: 'Python Dashboard Project', date: 'April 2025',
@@ -1640,8 +1828,8 @@ const PROJECTS = {
       'Histogram charts for attendance distribution analysis',
       'Demonstrated ability to convert raw data into clear visual insights',
     ],
-    link: CFG.p2,
-    demo: '',
+    gh: CFG.p2_gh,
+    li: CFG.p2_li,
   },
   p3: {
     type: 'Excel Dashboard Project', date: 'April 2025',
@@ -1655,8 +1843,8 @@ const PROJECTS = {
       'Professional dashboard layout with consistent visual hierarchy',
       'Clear data storytelling for non-technical stakeholders',
     ],
-    link: CFG.p3,
-    demo: '',
+    gh: CFG.p3_gh,
+    li: CFG.p3_li,
   },
   p4: {
     type: 'Data Science / ML Project', date: 'Infosys Springboard 6.0 — Ongoing',
@@ -1670,49 +1858,55 @@ const PROJECTS = {
       'Interactive Streamlit dashboard with real-time AQI alerts and trend analysis',
       'Automated model retraining pipeline for continuous real-time insights',
     ],
-    link: CFG.p4,
-    demo: '',  // add Streamlit app URL here if deployed
+    gh: CFG.p4_gh,
+    li: CFG.p4_li,
   },
 };
 /* ============================================================
    CERTIFICATIONS DATA  (new CV — 4 certs)
 ============================================================ */
 const CERTS = [
-  { ico:'🤖', title:'ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI &amp; LLM', org:'Infosys · August 2025',        link: CFG.c1 },
-  { ico:'🌐', title:'Computer Communications',                                          org:'University of Colorado / Coursera · November 2024', link: CFG.c2 },
-  { ico:'🔐', title:'Privacy &amp; Security in Online Social Media (Elite)',            org:'NPTEL · March 2024',           link: CFG.c3 },
-  { ico:'📊', title:'From Data to Insights: A Hands-On Approach to Data Science',      org:'LPU · July 2025',              link: CFG.c4 },
-  // Add more: { ico:'🏆', title:'...', org:'... · Date', link:'URL' }
+  { ico:'fa-robot',        title:'ChatGPT-4 Prompt Engineering: ChatGPT, Generative AI &amp; LLM', org:'Infosys · August 2025',                          link: CFG.c1 },
+  { ico:'fa-network-wired',title:'Computer Communications',                                         org:'University of Colorado / Coursera · November 2024', link: CFG.c2 },
+  { ico:'fa-shield-alt',   title:'Privacy &amp; Security in Online Social Media (Elite)',           org:'NPTEL · March 2024',                               link: CFG.c3 },
+  { ico:'fa-chart-bar',    title:'From Data to Insights: A Hands-On Approach to Data Science',     org:'LPU · July 2025',                                  link: CFG.c4 },
+  // To add more: { ico:'fa-award', title:'...', org:'Issuer · Month Year', link:'https://...' }
 ];
 
 /* Render certs */
 (function renderCerts() {
   const g = document.getElementById('cert-grid');
   CERTS.forEach(c => {
-    const hasLink = c.link && c.link !== '#';
+    const hasLink = c.link && c.link !== '';
     const el = document.createElement(hasLink ? 'a' : 'div');
-    if (hasLink) { el.href = c.link; el.target = '_blank'; el.rel = 'noopener'; }
+    if (hasLink) {
+      el.href   = c.link;
+      el.target = '_blank';
+      el.rel    = 'noopener noreferrer';
+    }
     el.className = 'cert-card reveal' + (hasLink ? '' : ' no-link');
     el.innerHTML =
-      `<div class="cert-icon">${c.ico}</div>` +
+      `<div class="cert-icon"><i class="fas ${c.ico}"></i></div>` +
       `<div>
         <div class="cert-name">${c.title}</div>
         <div class="cert-org">${c.org}</div>
         ${hasLink
-          ? `<div class="cert-view"><i class="fas fa-external-link-alt"></i>&nbsp;View Certificate ↗</div>`
-          : `<div class="cert-soon">🔒 Link coming soon</div>`}
+          ? `<div class="cert-view"><i class="fas fa-external-link-alt"></i>&nbsp;View Certificate</div>`
+          : `<div class="cert-soon"><i class="fas fa-lock"></i> Link coming soon</div>`}
       </div>`;
     g.appendChild(el);
   });
 })();
 
 /* ============================================================
-   MODAL  — GitHub + optional Live Demo
+   MODAL  — "View Code" (GitHub) + "View Post" (LinkedIn)
 ============================================================ */
 function openModal(id) {
-  const p = PROJECTS[id];
-  const hasGH   = p.link && p.link !== '#';
-  const hasDemo = p.demo && p.demo !== '';
+  const p   = PROJECTS[id];
+  const hasGH = p.gh && p.gh !== '';
+  const hasLI = p.li && p.li !== '';
+  const hasAny = hasGH || hasLI;
+
   document.getElementById('modal-box').innerHTML =
     `<div class="modal-hd">
        <div>
@@ -1724,24 +1918,30 @@ function openModal(id) {
      <div class="m-sec"><h4>Description</h4><p>${p.desc}</p></div>
      <div class="m-sec">
        <h4>Technologies Used</h4>
-       <div class="m-tags">${p.techs.map(t=>`<span class="m-tag">${t}</span>`).join('')}</div>
+       <div class="m-tags">${p.techs.map(t => `<span class="m-tag">${t}</span>`).join('')}</div>
      </div>
      <div class="m-sec">
        <h4>Key Features &amp; Impact</h4>
-       <ul class="m-list">${p.feats.map(f=>`<li>${f}</li>`).join('')}</ul>
+       <ul class="m-list">${p.feats.map(f => `<li>${f}</li>`).join('')}</ul>
      </div>
      <div class="m-acts">
        ${hasGH
-         ? `<a href="${p.link}" target="_blank" rel="noopener" class="m-link">
-              <i class="fab fa-github"></i> View on GitHub
+         ? `<a href="${p.gh}" target="_blank" rel="noopener noreferrer" class="m-link">
+              <i class="fab fa-github"></i> View Code <i class="fas fa-external-link-alt m-ext"></i>
             </a>`
-         : `<span class="m-link-dis"><i class="fas fa-clock"></i> GitHub link coming soon</span>`}
-       ${hasDemo
-         ? `<a href="${p.demo}" target="_blank" rel="noopener" class="m-link-demo">
-              <i class="fas fa-external-link-alt"></i> Live Demo
+         : `<span class="m-link-dis" title="No public repository for this project">
+              <i class="fab fa-github"></i> No Repository
+            </span>`}
+       ${hasLI
+         ? `<a href="${p.li}" target="_blank" rel="noopener noreferrer" class="m-link-li">
+              <i class="fab fa-linkedin"></i> View Post <i class="fas fa-external-link-alt m-ext"></i>
             </a>`
          : ''}
+       ${!hasAny
+         ? `<span class="m-link-dis"><i class="fas fa-clock"></i> Links coming soon</span>`
+         : ''}
      </div>`;
+
   document.getElementById('modal-bg').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1798,7 +1998,9 @@ let isDark = true;
 function toggleTheme() {
   isDark = !isDark;
   document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-  document.getElementById('themeBtn').textContent = isDark ? '☀ Light' : '🌙 Dark';
+  document.getElementById('themeBtn').innerHTML = isDark
+    ? '<i class="fas fa-sun" style="font-size:.8rem"></i> Light'
+    : '<i class="fas fa-moon" style="font-size:.8rem"></i> Dark';
 }
 
 /* ============================================================
@@ -1849,6 +2051,10 @@ addEventListener('scroll', () => {
         setTimeout(() => {
           en.target.classList.remove('rv-hide');
           en.target.classList.add('rv-show');
+          // trigger ss-bar animation if it's a soft-skill card
+          if (en.target.classList.contains('ss-card')) {
+            en.target.classList.add('bar-animate');
+          }
         }, i * 85);
         obs.unobserve(en.target);
       }
@@ -1860,6 +2066,9 @@ addEventListener('scroll', () => {
       if (el.getBoundingClientRect().top > innerHeight) {
         el.classList.add('rv-hide');
         obs.observe(el);
+      } else if (el.classList.contains('ss-card')) {
+        // already visible on load — animate bar immediately
+        setTimeout(() => el.classList.add('bar-animate'), 300);
       }
     });
   }, 200);
